@@ -1,0 +1,126 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>ChatGPT Prompt Engineering Quiz</title>
+  <style>
+    #download-btn {
+      display: none;
+      margin-top: 20px;
+    }
+    #answer-key {
+      display: none;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>ChatGPT Prompt Engineering for Developers – Course Quiz</h1>
+
+  <p>Instructions: Select the correct answer for each question.</p>
+
+  <label for="name">Name: </label>
+  <input type="text" id="name" placeholder="Enter your name">
+  
+  <hr>
+
+  <form id="quiz-form">
+    <div id="questions"></div>
+
+    <br>
+
+    <p>Score: <span id="score">0</span> / 10</p>
+
+    <button type="button" onclick="checkAnswers()">Check Answers</button>
+    <button type="button" id="download-btn" onclick="downloadPDF()">Download Certificate (PDF)</button>
+
+  </form>
+
+  <div id="answer-key">
+    B,B,A,B,B,C,A,B,A,B
+  </div>
+
+  <script>
+    const questions = [
+      "What is the main goal of prompt engineering?",
+      "Which of these prompts is more likely to produce a clear response from ChatGPT?",
+      "What does 'few-shot prompting' mean?",
+      "What is a good way to help ChatGPT avoid factual mistakes?",
+      "What does 'chain-of-thought prompting' encourage the model to do?",
+      "Which of the following is NOT a benefit of clearly formatted prompts?",
+      "How can you explicitly set the response length in a prompt?",
+      "When using ChatGPT to rewrite text more formally, which prompt works best?",
+      "If the model makes a mistake, what should you do?",
+      "Why is it helpful to specify a format for the answer (like 'Reply in bullet points') in your prompt?"
+    ];
+
+    const options = [
+      ["A. To build neural network architectures", "B. To craft effective inputs so language models deliver desired outputs", "C. To optimize server response times"],
+      ["A. Summarize.", "B. Please summarize the following news article in 3-4 sentences, focusing on key facts.", "C. What is this?"],
+      ["A. Providing multiple examples of desired input and output pairs in your prompt", "B. Playing a short game with ChatGPT", "C. Asking only one question at a time"],
+      ["A. Just trust its answers", "B. Prompt with 'If you don’t know, say so'", "C. Only use short prompts"],
+      ["A. Give a single-word answer", "B. Output intermediate reasoning steps", "C. Skip the question if unsure"],
+      ["A. Higher likelihood of relevant, useful responses", "B. Easier to automate prompt creation", "C. Models can process images better"],
+      ["A. By limiting the number of words or sentences", "B. By requesting images instead of text", "C. By specifying the programming language"],
+      ["A. Do it again.", "B. Rewrite the following paragraph in a formal academic tone: [insert paragraph]", "C. Make it good."],
+      ["A. Try rephrasing or clarifying your prompt", "B. Give up on using AI entirely", "C. Ignore the error and continue"],
+      ["A. The model is forced to answer in single words", "B. It helps the model organize its response in a useful way", "C. Formatting is never important"]
+    ];
+
+    const questionsDiv = document.getElementById('questions');
+    questions.forEach((q, idx) => {
+      const qDiv = document.createElement('div');
+      qDiv.innerHTML = `<p>${idx + 1}. ${q}</p>` +
+        options[idx].map(opt => `
+          <label><input type="radio" name="q${idx}" value="${opt.charAt(0)}"> ${opt}</label><br>
+        `).join('');
+      questionsDiv.appendChild(qDiv);
+    });
+
+    function checkAnswers() {
+      const answerKey = document.getElementById('answer-key').innerText.split(',');
+      let score = 0;
+
+      for (let i = 0; i < answerKey.length; i++) {
+        const selected = document.querySelector(`input[name="q${i}"]:checked`);
+        if (selected && selected.value === answerKey[i]) {
+          score++;
+        }
+      }
+
+      document.getElementById('score').innerText = score;
+
+      if (score >= 8) {
+        document.getElementById('download-btn').style.display = 'inline';
+      } else {
+        document.getElementById('download-btn').style.display = 'none';
+        alert('You need at least 8/10 to download the certificate. Try again!');
+      }
+    }
+
+    function downloadPDF() {
+      const name = document.getElementById('name').value.trim();
+      if (!name) {
+        alert('Please enter your name before downloading!');
+        return;
+      }
+      const score = document.getElementById('score').innerText;
+      const link = document.createElement('a');
+      const content = `Certificate of Completion
+
+Name: ${name}
+Score: ${score}/10
+
+Congratulations on successfully completing the ChatGPT Prompt Engineering Quiz!`;
+      const blob = new Blob([content], { type: 'application/pdf' });
+      const url = URL.createObjectURL(blob);
+      link.href = url;
+      link.download = 'certificate.pdf';
+      link.click();
+      URL.revokeObjectURL(url);
+    }
+  </script>
+
+</body>
+</html>
